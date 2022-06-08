@@ -59,7 +59,7 @@ def do_zero():
             lock_release()
         if v2 - v1 != 0:
             strikes += 1
-            print(f"Value mismatch after {rounds} rounds")
+            print(f"Value mismatch (+{v2 - v1}) after {rounds} rounds")
             rounds = 0
         if strikes >= g_max_strikes:
             print("Strike out!")
@@ -89,10 +89,15 @@ def do_runit():
         thr.start()
     for thr in threads:
         thr.join()
-    print("Exiting main thread")
 
 def parse_opts():
-    pass
+    global g_use_locking
+    parser = argparse.ArgumentParser(description="Fiddle with thread synchronization")
+    parser.add_argument("--max-secs", type=int, default=g_max_secs)
+    parser.add_argument("--max-strikes", type=int, default=g_max_strikes)
+    parser.add_argument("--use-lock", action="store_true")
+    args = parser.parse_args()
+    g_use_locking = args.use_lock
 
 if __name__ == "__main__":
     parse_opts()
