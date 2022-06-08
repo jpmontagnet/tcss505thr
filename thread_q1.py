@@ -1,3 +1,6 @@
+# TCSS 505 - threading homework - question 1
+# Student: JP Montagnet / jpmont
+
 import threading
 import time
 import argparse
