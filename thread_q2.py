@@ -1,4 +1,4 @@
-# TCSS 505 - threading homework - question 1
+# TCSS 505 - threading homework - question 2
 # Student: JP Montagnet / jpmont
 
 import argparse
@@ -8,11 +8,24 @@ import threading
 import time
 
 """
+Goal:
 Write a program that uses at least two threads to execute the same code
 with the goal of improving the performance of the code.
 First, execute the program with a single thread and time the result.
 Next, execute the program with more than one thread and time the result,
 showing an improvement in performance.
+
+Solution:
+The Sorting Hat, of Harry Potter fame, is a bottleneck.
+Implemented additional Sorting Hats.
+The roster of of students is split up evenly among the hats
+via modulus of their respective index in the roster list.
+Locking is used only for outputting the results.
+Optionally, each student's name is searched for in Wikipedia
+before the student is sorted. After all, the hats want to make
+informed decisions! Okay, not really. Their "sorting" selections
+here are, in fact, purely random. It is the long I/O delay of
+the Wikipedia searches that makes multi-threading a win.
 """
 
 g_houses_dflt = """
@@ -24,7 +37,7 @@ Slytherin
 
 # Arbitrary subset of names from:
 # harrypotter.neoseeker.com/wiki/List_of_students_that_go_to_Hogwarts
-# ...plus a few others.
+# ...plus a few other magical kids.
 g_roster_dflt = """
 Harry Potter
 Hermione Granger
@@ -39,7 +52,6 @@ Anakin Skywalker
 Tabitha Stephens
 Sabrina Spellman
 Constance Contraire
-Quentin Beck
 Loki Laufeyson
 Ned Leeds
 Billy Batson
@@ -124,6 +136,7 @@ def assign_houses():
     global g_opts
     for opt in "num_threads search_wiki".split():
         print(f"Option {opt}: {getattr(g_opts, opt)}")
+    print("---")
     threads = []
     for tid in range(g_opts.num_threads):
         thr = threading.Thread(target=sorting_hat, args=(tid,))
@@ -134,6 +147,7 @@ def assign_houses():
     for thr in threads:
         thr.join()
     finit = time.perf_counter()
+    print("---")
     print(f"Sorting completed in {finit - start} secs")
 
 def parse_opts():

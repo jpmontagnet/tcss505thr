@@ -1,0 +1,40 @@
+/Users/jope/src/ghub/tcss505thr/venv/bin/python /Users/jope/src/ghub/tcss505thr/thread_q2.py --search-wiki
+Option num_threads: 1
+Option search_wiki: True
+---
+Harry Potter: Fantasy literature series by J.K. Rowling
+Harry Potter goes to Hufflepuff!
+Hermione Granger: Fictional character from the Harry Potter literature series
+Hermione Granger goes to Ravenclaw!
+Ginny Weasley: Fictional character in J. K. Rowling's Harry Potter series
+Ginny Weasley goes to Slytherin!
+Ron Weasley: Fictional character of Harry Potter series
+Ron Weasley goes to Gryffindor!
+Luna Lovegood: Fictional character from Harry Potter
+Luna Lovegood goes to Gryffindor!
+Draco Malfoy: Fictional character of the Harry Potter series
+Draco Malfoy goes to Slytherin!
+Neville Longbottom: Fictional character in the Harry Potter universe
+Neville Longbottom goes to Hufflepuff!
+Millicent Bulstrode: (search was inconclusive)
+Millicent Bulstrode goes to Gryffindor!
+Kevin Entwhistle: (search was inconclusive)
+Kevin Entwhistle goes to Slytherin!
+Anakin Skywalker: (search was inconclusive)
+Anakin Skywalker goes to Ravenclaw!
+Tabitha Stephens: (search was inconclusive)
+Tabitha Stephens goes to Ravenclaw!
+Sabrina Spellman: Fictional half-witch half-human
+Sabrina Spellman goes to Slytherin!
+Constance Contraire: (search was inconclusive)
+Constance Contraire goes to Ravenclaw!
+Loki Laufeyson: (search was inconclusive)
+Loki Laufeyson goes to Ravenclaw!
+Ned Leeds: Comic book character
+Ned Leeds goes to Slytherin!
+Billy Batson: (search was inconclusive)
+Billy Batson goes to Slytherin!
+---
+Sorting completed in 4.489735207986087 secs
+
+Process finished with exit code 0
