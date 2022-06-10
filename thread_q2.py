@@ -28,28 +28,13 @@ Slytherin
 g_roster_dflt = """
 Harry Potter
 Hermione Granger
-Fred Weasley
-George Weasley
 Ginny Weasley
 Ron Weasley
-Percy Weasley
-Cedric Diggory
-Oliver Wood
 Luna Lovegood
 Draco Malfoy
 Neville Longbottom
-Ernie MacMillan
 Millicent Bulstrode
-Vincent Crabbe
-Victoria Frobisher
-Cormac McLaggen
-Mandy Brocklehurst
-Stephen Cornfoot
 Kevin Entwhistle
-Morag McDougal
-Padma Patil
-Orla Quirke
-Justin Finch-Fletchley
 Anakin Skywalker
 Tabitha Stephens
 Sabrina Spellman
@@ -75,6 +60,9 @@ g_params = {
     "action": "query",
     "generator": "allpages",
     "gaplimit": 1,
+    "prop": "description",
+    "gapfilterredir": "nonredirects",
+    "format": "json",
 }
 
 g_lock = threading.Lock()
@@ -96,9 +84,24 @@ def lock_release():
 def search_wiki(name: str):
     sess = requests.Session()
     params = g_params.copy()
-    params["gspfrom"] = name
-    # TODO
-    return f"All about {name}"
+    params["gapfrom"] = name
+    resp = sess.get(url=g_url, params=params)
+    data = resp.content
+    if not data:
+        return None  # "no resp content"
+    data = resp.json()
+    if not data:
+        return None  # "not json"
+    if "query" not in data:
+        return None  # "no query"
+    data = data["query"]
+    if "pages" not in data:
+        return None  # "no pages"
+    data = list(data["pages"].values())[0]
+    if "description" not in data:
+        return None  # "no description"
+    data = data["description"]
+    return data
 
 def sorting_hat(tid: int):
     global g_opts
@@ -109,7 +112,7 @@ def sorting_hat(tid: int):
         if g_opts.search_wiki:
             info = search_wiki(v)
             if info is None:
-                info = "Search came up empty"
+                info = "(search was inconclusive)"
         house = random.choice(g_opts.houses_list)
         lock_acquire()
         if g_opts.search_wiki:
