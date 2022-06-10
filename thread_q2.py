@@ -2,12 +2,10 @@
 # Student: JP Montagnet / jpmont
 
 import argparse
-import os.path
+import requests
 import random
-import shutil
 import threading
 import time
-import tempfile
 
 """
 Write a program that uses at least two threads to execute the same code
@@ -67,26 +65,62 @@ class Opts:
     roster_file = None
     roster_list = g_roster_dflt
     num_threads = 1
-    out_basedir = "."
-    keep_outdir = False
+    search_wiki = False
 
 g_opts = Opts()
+
+g_url = "https://en.wikipedia.org/w/api.php"
+
+g_params = {
+    "action": "query",
+    "generator": "allpages",
+    "gaplimit": 1,
+}
+
+g_lock = threading.Lock()
+
+def lock_acquire():
+    global g_opts
+    global g_lock
+    if g_opts.num_threads == 1:
+        return
+    g_lock.acquire()
+
+def lock_release():
+    global g_opts
+    global g_lock
+    if g_opts.num_threads == 1:
+        return
+    g_lock.release()
+
+def search_wiki(name: str):
+    sess = requests.Session()
+    params = g_params.copy()
+    params["gspfrom"] = name
+    # TODO
+    return f"All about {name}"
 
 def sorting_hat(tid: int):
     global g_opts
     roster = [v for i, v in enumerate(g_opts.roster_list)
               if i % g_opts.num_threads == tid]
     for i, v in enumerate(roster):
-        filename = os.path.join(g_opts.out_basedir, f"{tid}_{i}")
+        info = None
+        if g_opts.search_wiki:
+            info = search_wiki(v)
+            if info is None:
+                info = "Search came up empty"
         house = random.choice(g_opts.houses_list)
-        with open(filename, "w") as f:
-            print(f"{v} goes to {house}!", file=f)
+        lock_acquire()
+        if g_opts.search_wiki:
+            print(f"{v}: {info}")
+        print(f"{v} goes to {house}!")
+        lock_release()
 
 def assign_houses():
     global g_opts
-    print(f"Option num-threads = {g_opts.num_threads}")
-    print(f"Option out-basedir = {g_opts.out_basedir}")
-    print(f"Option keep-outdir = {g_opts.keep_outdir}")
+    for opt in "num_threads search_wiki".split():
+        print(f"Option {opt}: {getattr(g_opts, opt)}")
     threads = []
     for tid in range(g_opts.num_threads):
         thr = threading.Thread(target=sorting_hat, args=(tid,))
@@ -98,8 +132,6 @@ def assign_houses():
         thr.join()
     finit = time.perf_counter()
     print(f"Sorting completed in {finit - start} secs")
-    if not g_opts.keep_outdir:
-        shutil.rmtree(path=g_opts.out_basedir)
 
 def parse_opts():
     global g_opts
@@ -109,19 +141,17 @@ def parse_opts():
         help="File containing roster of students")
     parser.add_argument("--num-threads", type=int, default=Opts.num_threads,
         help="Number of threads")
-    parser.add_argument("--out-basedir", type=str, default=".",
-        help="Base output dir")
-    parser.add_argument("--keep_outdir", action="store_true",
-        help="Keep temporary output dir and its contents")
+    parser.add_argument("--search-wiki", action="store_true",
+        help="Search online for info when sorting")
     args = parser.parse_args()
+
     if args.roster_file:
         with open(args.roster_file, "r") as r:
             g_opts.roster = r.readlines()
             g_opts.roster_file = args.roster
+
     g_opts.num_threads = args.num_threads
-    g_opts.out_basedir = tempfile.mkdtemp(dir=args.out_basedir, prefix="hogwarts_")
-    tempfile.tempdir = g_opts.out_basedir
-    g_opts.keep_outdir = args.keep_outdir
+    g_opts.search_wiki = args.search_wiki
 
 if __name__ == "__main__":
     parse_opts()
