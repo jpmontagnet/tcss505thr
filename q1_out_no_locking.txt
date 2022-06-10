@@ -1,0 +1,11 @@
+/Users/jope/src/ghub/tcss505thr/venv/bin/python /Users/jope/src/ghub/tcss505thr/thread_q1.py
+Option max_runsecs: 5
+Option max_strikes: 3
+Option use_locking: False
+---
+Value mismatch (+42381) after 119154 rounds
+Value mismatch (+42613) after 42019 rounds
+Value mismatch (+42657) after 18371 rounds
+Strike out!
+
+Process finished with exit code 0

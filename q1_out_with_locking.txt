@@ -1,0 +1,8 @@
+/Users/jope/src/ghub/tcss505thr/venv/bin/python /Users/jope/src/ghub/tcss505thr/thread_q1.py --use-locking
+Option max_runsecs: 5
+Option max_strikes: 3
+Option use_locking: True
+---
+Timeout after 5 secs, 6008732 rounds
+
+Process finished with exit code 0
